@@ -1,0 +1,105 @@
+﻿<#@ assembly name="$(SolutionDir)Sitecore.CodeGenerator\bin\Debug\Sitecore.CodeGenerator.dll" #>
+<#@ assembly name="$(SolutionDir)Lib\Sitecore.Kernel.DLL" #>
+<#@ assembly name="$(ProjectDir)bin\Debug\Glass.Mapper.Sc.DLL" #>
+<#@ import namespace="Sitecore.CodeGenerator" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Glass.Mapper.Sc.Fields" #>
+<#@ include file="GlassMappedClassTemplate.tt" #>
+<#+
+// <copyright file="GlassGenerator.tt" company="">
+//  Copyright © . All Rights Reserved.
+// </copyright>
+
+public class FieldOptions
+{
+	public string GlassFieldTypeName { get; set; }
+	public string AttributeExtras { get; set; }
+}
+
+public class GlassGenerator : Generator
+{
+	public GlassMappedClassTemplate GlassTemplate { get; private set; }
+
+	private Action<string,FieldOptions> SetCustomOptionsFunction { get; set; }
+
+	private string Database { get; set; }
+	private string[] Paths { get; set; }
+
+	public List<string> GeneratedFiles { get; private set; }
+
+	public GlassGenerator(string database, string[] paths, Action<string,FieldOptions> setCustomOptionsFunction)
+	{
+		SetCustomOptionsFunction = setCustomOptionsFunction;
+		Database = database;
+		Paths = paths;
+		this.GeneratedFiles = new List<string>();
+	}
+
+	protected override void RunCore()
+	{
+		this.GlassTemplate = new GlassMappedClassTemplate();
+		var resolver = new TemplatesResolver(
+			Context.Host.ResolvePath(@"..\Data\serialization\"),
+			Paths,
+			Database);
+		foreach(var template in resolver.Templates)
+		{
+			this.GlassTemplate.Template = template;
+			this.GlassTemplate.GetFieldOptionsFunction = GetFieldOptions;
+			string fileName = string.Concat("I", this.GlassTemplate.Identifier(template.SyncItem.Name), ".gen.cs");
+			this.GlassTemplate.RenderToFile(fileName);
+			this.GeneratedFiles.Add(fileName);
+		}
+	}
+
+	public FieldOptions GetFieldOptions(string fieldType, string fieldId)
+	{
+		FieldOptions result = new FieldOptions();
+		switch (fieldType)
+		{
+			case "Checkbox":
+				result.GlassFieldTypeName = "bool";
+				break;
+			case "Integer":
+				result.GlassFieldTypeName = "int";
+				break;
+			case "Number":
+				result.GlassFieldTypeName = typeof(Decimal).Name;
+				break;
+			case "Date":
+			case "Datetime":
+				result.GlassFieldTypeName = typeof(DateTime).Name;
+				break;
+			case "File":
+			case "File Drop Area":
+				result.GlassFieldTypeName = typeof(File).Name;
+				break;
+			case "Name Value List":
+			case "Name Lookup Value List":
+				result.GlassFieldTypeName = typeof(System.Collections.Specialized.NameValueCollection).Name;
+				break;
+			// case "???": result.GlassFieldTypeName = typeof(HtmlEncodedString).Name; break;
+			case "Image":
+				result.GlassFieldTypeName = typeof(Image).Name;
+				break;
+			case "Droplink":
+			case "Droptree":
+			case "General Link":
+			case "General Link with Search":
+			case "Version Link":
+			case "link":
+				result.GlassFieldTypeName = typeof(Link).Name;
+				break;
+			// case "???": result.GlassFieldTypeName = typeof(LinkType).Name; break;
+			case "Tristate":
+				result.GlassFieldTypeName = typeof(TriState).Name;
+				break;
+			default:
+				result.GlassFieldTypeName = "string";
+				break;
+		}
+		SetCustomOptionsFunction(fieldId, result);
+		return result;
+	}
+}
+#>

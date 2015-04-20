@@ -1,0 +1,33 @@
+<#@ template language="C#" debug="True" #>
+<#@ output extension="gen.txt" #>
+<#@ include file="T4Toolbox.tt" #>
+<#@ include file="GlassGenerator.tt" #>
+<#
+	GlassGenerator generator = new GlassGenerator(
+			"master",
+			new [] { "/sitecore/templates/Sitecore Code Generator Sample" },
+			(fieldId, fieldOptions) =>
+				{
+					// Add custom options, like setting the return type of a field property explicitly
+
+					// Dog -> Food
+					if("{1033D7C1-9C1A-4C65-8316-81B6D5E46EB5}".Equals(fieldId))
+					{
+						fieldOptions.GlassFieldTypeName = "IEnumerable<IFood>";
+					}
+
+					// Dog -> Dog's friends
+					if("{20D7789D-BCE0-473E-BB46-59B216CE2C10}".Equals(fieldId))
+					{
+						fieldOptions.GlassFieldTypeName = "IEnumerable<IDog>";
+						fieldOptions.AttributeExtras = ", Setting = SitecoreFieldSettings.DontLoadLazily";
+					}
+				});
+    generator.Run();
+
+	WriteLine("These files were generated:");
+	foreach(var file in generator.GeneratedFiles)
+	{
+		WriteLine(string.Concat("- ", file));
+	}
+#>

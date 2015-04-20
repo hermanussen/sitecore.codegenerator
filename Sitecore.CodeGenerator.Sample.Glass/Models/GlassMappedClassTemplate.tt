@@ -1,0 +1,80 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)Lib\Sitecore.Kernel.DLL" #>
+<#@ import namespace="Sitecore.CodeGenerator.Domain" #>
+<#@ import namespace="System.Linq" #>
+<#+
+public class GlassMappedClassTemplate : CSharpTemplate
+{
+	public TemplateItem Template { get; set; }
+
+	public Func<string,string,FieldOptions> GetFieldOptionsFunction { get; set; }
+
+	private string Extends { get; set; }
+
+	public override string TransformText()
+	{
+		this.Extends = string.Empty;
+		if(this.Template.BaseTemplates.Any())
+		{
+			this.Extends = string.Concat(" : ", string.Join(", ", this.Template.BaseTemplates.Select(b => string.Concat("I", Identifier(b.SyncItem.Name)))));
+		}
+		else
+		{
+			this.Extends = string.Empty; //" : IModelBase";
+		}
+
+		base.TransformText();
+#>
+namespace <#= DefaultNamespace #>
+{
+	using System;
+    using System.Collections.Generic;
+	using System.Collections.Specialized;
+    using global::Glass.Mapper.Sc.Configuration;
+    using global::Glass.Mapper.Sc.Configuration.Attributes;
+	using global::Glass.Mapper.Sc.Fields;
+
+	/// <summary>
+	/// Represents a mapped type for item <#= Template.SyncItem.ID #> in Sitecore.
+	/// Path: <#= Template.SyncItem.ItemPath #>
+	/// </summary>
+	[SitecoreType(TemplateId = "<#= Template.SyncItem.ID #>")]
+	public partial interface I<#=Identifier(Template.SyncItem.Name)#><#=Extends#>
+	{
+<#+
+		foreach(var section in Template.Sections)
+		{
+#>
+		#region <#=section.SyncItem.Name#>
+
+<#+
+			foreach(var field in section.Fields)
+			{
+				var fieldOptions = GetFieldOptionsFunction(field.FieldTypeName, field.SyncItem.ID);
+				if(! string.IsNullOrWhiteSpace(field.FieldTitle))
+				{
+#>
+		/// <summary>
+		/// <#=field.FieldTitle#>
+		/// </summary>
+<#+
+				}
+#>
+	    [SitecoreField(FieldId = "<#=field.SyncItem.ID#>"<#=fieldOptions.AttributeExtras ?? string.Empty #>)]
+		<#=fieldOptions.GlassFieldTypeName#> <#=Identifier(field.SyncItem.Name)#> { get; set; }
+
+<#+
+			}
+#>
+		#endregion
+
+<#+
+		}
+#>
+	}
+}
+<#+
+        return this.GenerationEnvironment.ToString();
+	}
+}
+#>
