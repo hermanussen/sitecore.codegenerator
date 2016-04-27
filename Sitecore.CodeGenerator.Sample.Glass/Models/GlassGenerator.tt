@@ -37,6 +37,8 @@ public class GlassGenerator : Generator
 
 	protected override void RunCore()
 	{
+		// If you are using Rainbow serialization, you need to make some changes to the following lines
+		// This is described on https://github.com/hermanussen/sitecore.codegenerator#using-unicorns-rainbow-format
 		this.GlassTemplate = new GlassMappedClassTemplate();
 		var resolver = new TemplatesResolver(
 			Context.Host.ResolvePath(@"..\Data\serialization\"),

@@ -20,6 +20,21 @@ Sitecore.CodeGenerator reads serialized data from the filesystem. The T4 templat
 6. In SampleScriptTemplates.tt, change the following code to set the path(s) of the templates that you want to generate code for: ```new [] { "/sitecore/templates/Sitecore Code Generator Sample" }```.
 7. Run the code generation either by right-clicking SampleScriptTemplates.tt and choosing "Run Custom Tool", or choosing "Build" > "Transform All T4 Templates".
 
+## Using Unicorn's Rainbow format
+
+Since Unicorn has adopted a new serialization format from version 3, the code generation needs to be configured slightly different to be used with that.
+
+1. Go to GlassGenerator.tt and locate the RunCore() method
+2. Locate the following line within that method:
+```
+var resolver = new TemplatesResolver(
+```
+3. Change that line to the following:
+```
+var resolver = new TemplatesResolverRainbow(
+```
+4. Ensure that the path to the serialized data (as set in step 5 of the previous section) points to a valid Unicorn configuration that contains Sitecore templates in .yml files. Note that this is on the next line of code.
+
 ## Further configuration
 
 It can't always be determined exactly from the Sitecore data what the return types of properties need to be. E.g.: A multilist may be used to select a number of items of a certain type. But you need to define that type yourself.
@@ -38,7 +53,7 @@ if("{1033D7C1-9C1A-4C65-8316-81B6D5E46EB5}".Equals(fieldId))
 ```
 
 ## License
-Copyright (C) 2015 Robin Hermanussen
+Copyright (C) 2015-2016 Robin Hermanussen
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

@@ -1,0 +1,17 @@
+﻿---
+ID: "110d503b-2ea3-4602-aca0-d8508376e30d"
+Parent: "319eb0a2-ef28-4dae-b35c-551bd53317b2"
+Template: "e269fbb5-3750-427a-9149-7aa950b49301"
+Path: /sitecore/templates/Sitecore Code Generator Sample/Animal/Animal
+DB: master
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150224T175642Z
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: sitecore\admin

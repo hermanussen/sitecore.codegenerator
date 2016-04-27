@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\serialization\Readme.txt" />
+    <Content Include="Data\Unicorn\Readme.txt" />
     <Content Include="Models\SampleScriptTemplates.gen.txt">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

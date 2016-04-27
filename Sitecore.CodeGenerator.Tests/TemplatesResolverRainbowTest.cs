@@ -1,5 +1,5 @@
 ﻿// /*
-// Copyright (C) 2015 Robin Hermanussen
+// Copyright (C) 2016 Robin Hermanussen
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,33 +21,33 @@ using Sitecore.CodeGenerator.Domain;
 
 namespace Sitecore.CodeGenerator.Tests
 {
-    public class TemplatesResolverTest
+    public class TemplatesResolverRainbowTest
     {
         [Test]
         public void ShouldResolveTemplates()
         {
-            var resolver = new TemplatesResolver(
-                @"..\..\..\Sitecore.CodeGenerator.Sample.Glass\Data\Serialization", new [] { "/sitecore/templates" });
-            resolver.Templates.Select(t => t.SyncItem.Name).ShouldAllBeEquivalentTo(new []
+            var resolver = new TemplatesResolverRainbow(
+                @"..\..\..\Sitecore.CodeGenerator.Sample.Glass\Data\Unicorn", new[] { "/sitecore/templates" });
+            resolver.Templates.Select(t => t.SyncItem.Name).ShouldAllBeEquivalentTo(new[]
                 {
                     "Animal",
                     "Dog",
                     "Food",
                     "Nameable"
                 });
-            
+
             TemplateItem dogTemplate = resolver.Templates.FirstOrDefault(t => t.SyncItem.Name == "Dog");
             dogTemplate.Should().NotBeNull();
-            dogTemplate.BaseTemplates.Select(b => b.SyncItem.Name).ShouldAllBeEquivalentTo(new []
+            dogTemplate.BaseTemplates.Select(b => b.SyncItem.Name).ShouldAllBeEquivalentTo(new[]
                 {
                     "Animal",
                     "Nameable"
                 });
-            
+
             TemplateSection dogSection = dogTemplate.Sections.FirstOrDefault(s => s.SyncItem.Name == "Dog");
             dogSection.Should().NotBeNull();
 
-            dogSection.Fields.Select(f => f.SyncItem.Name).ShouldAllBeEquivalentTo(new []
+            dogSection.Fields.Select(f => f.SyncItem.Name).ShouldAllBeEquivalentTo(new[]
                 {
                     "Eats",
                     "Friends"
