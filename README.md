@@ -26,13 +26,13 @@ Since Unicorn has adopted a new serialization format from version 3, the code ge
 
 1. Go to GlassGenerator.tt and locate the RunCore() method
 2. Locate the following line within that method:
-```
+`
 var resolver = new TemplatesResolver(
-```
+`
 3. Change that line to the following:
-```
+`
 var resolver = new TemplatesResolverRainbow(
-```
+`
 4. Ensure that the path to the serialized data (as set in step 5 of the previous section) points to a valid Unicorn configuration that contains Sitecore templates in .yml files. Note that this is on the next line of code.
 
 ## Further configuration
