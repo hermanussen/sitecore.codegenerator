@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.3
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.CodeGenerator", "Sitecore.CodeGenerator\Sitecore.CodeGenerator.csproj", "{97696946-CFED-49DB-AB8D-53431E48E3DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.CodeGenerator.Sample.Glass", "Sitecore.CodeGenerator.Sample.Glass\Sitecore.CodeGenerator.Sample.Glass.csproj", "{192E52C3-52AB-4072-8B73-626B57ECC2C8}"
@@ -11,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D1325D
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.Codegenerator.Scripty.Sample.Glass", "Sitecore.Codegenerator.Scripty.Sample.Glass\Sitecore.Codegenerator.Scripty.Sample.Glass.csproj", "{235EB204-526E-4941-8EC0-04FDAB755FFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.Codegenerator.Scripty", "Sitecore.Codegenerator.Scripty\Sitecore.Codegenerator.Scripty.csproj", "{35439BDB-2B65-4F12-B6EB-83FE8FD99BD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +36,14 @@ Global
 		{06BBCA34-A007-4651-80B7-6A65636C3D25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06BBCA34-A007-4651-80B7-6A65636C3D25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06BBCA34-A007-4651-80B7-6A65636C3D25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{235EB204-526E-4941-8EC0-04FDAB755FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{235EB204-526E-4941-8EC0-04FDAB755FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{235EB204-526E-4941-8EC0-04FDAB755FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{235EB204-526E-4941-8EC0-04FDAB755FFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35439BDB-2B65-4F12-B6EB-83FE8FD99BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35439BDB-2B65-4F12-B6EB-83FE8FD99BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35439BDB-2B65-4F12-B6EB-83FE8FD99BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35439BDB-2B65-4F12-B6EB-83FE8FD99BD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

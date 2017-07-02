@@ -1,0 +1,27 @@
+﻿---
+ID: "f4a0d5d5-49f9-488f-82aa-d4be1adcb662"
+Parent: "84521828-eddc-47b3-bf39-781ee10a6a74"
+Template: "ab86861a-6030-46c5-b394-e8f99e8b87db"
+Path: /sitecore/templates/Sitecore Code Generator Sample/Dog
+DB: master
+SharedFields:
+- ID: "12c33f3f-86c5-43a5-aeb4-5598cec45116"
+  Hint: __Base template
+  Type: tree list
+  Value: |
+    {319EB0A2-EF28-4DAE-B35C-551BD53317B2}
+    {2852DE45-BF36-44D8-9435-8A30EC6923C5}
+- ID: "ba3f86a2-4a1c-4d78-b63d-91c2779c1b5e"
+  Hint: __Sortorder
+  Value: 625
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150224T174357Z
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: sitecore\admin

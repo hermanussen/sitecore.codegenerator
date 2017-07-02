@@ -17,6 +17,8 @@ namespace Sitecore.CodeGenerator
     using Data.Serialization.ObjectModel;
     using Diagnostics;
     using Domain;
+    using Rainbow.Model;
+    using Rainbow.Storage.Yaml;
     using Serialization;
 
     public abstract class TemplatesResolverBase
@@ -34,6 +36,26 @@ namespace Sitecore.CodeGenerator
 
             List<SyncItem> syncItems = GetAllItems(serializationFolder, db, includePaths);
 
+            this.InitializeTemplates(syncItems, serializationFolder);
+        }
+
+        public TemplatesResolverBase(List<string> serializationPaths)
+        {
+            List<SyncItem> syncItems = serializationPaths
+                .Select(s => new FileInfo(s))
+                .Where(s => s.Exists)
+                .Select(s => GetItem(s, null))
+                .ToList();
+
+            this.InitializeTemplates(syncItems, null);
+        }
+
+        protected abstract List<SyncItem> GetAllItems(DirectoryInfo folder, string db, string[] includePaths);
+
+        protected abstract SyncItem GetItem(FileInfo itemFile, Func<IItemData, bool> mustMatch);
+
+        private void InitializeTemplates(List<SyncItem> syncItems, DirectoryInfo serializationFolder)
+        {
             this.Templates = syncItems
                 .Where(s => s.TemplateID == TemplateIDs.Template.ToString())
                 .Select(t => new TemplateItem(t, syncItems))
@@ -49,7 +71,7 @@ namespace Sitecore.CodeGenerator
                 if (baseTemplates != null && !string.IsNullOrWhiteSpace(baseTemplates.FieldValue))
                 {
                     ID[] baseTemplateIds = baseTemplates.FieldValue
-                        .Split(new [] { '|', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Split(new[] { '|', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                         .Where(ID.IsID)
                         .Select(ID.Parse)
                         .ToArray();
@@ -59,33 +81,36 @@ namespace Sitecore.CodeGenerator
                         .Select(b => templateLookup[b.ToString()]));
 
                     // resolve base templates outside of resolving set
-                    foreach (ID baseTemplateId in baseTemplateIds
-                        .Where(b => ! templateItem.BaseTemplates.Any(bt => bt.SyncItem.ID == b.ToString())))
+                    if (serializationFolder != null)
                     {
-                        string baseTemplateFilePath = baseTemplateId.FindFilePath(serializationFolder);
-                        if (string.IsNullOrWhiteSpace(baseTemplateFilePath))
+                        foreach (ID baseTemplateId in baseTemplateIds
+                            .Where(b => !templateItem.BaseTemplates.Any(bt => bt.SyncItem.ID == b.ToString())))
                         {
-                            continue;
-                        }
-                        FileInfo baseTemplateFile = new FileInfo(baseTemplateFilePath);
-                        if (! baseTemplateFile.Exists)
-                        {
-                            continue;
-                        }
-                        SyncItem baseTemplateSyncItem = SyncItem.ReadItem(new Tokenizer(baseTemplateFile.OpenText()));
-                        if (baseTemplateSyncItem == null)
-                        {
-                            continue;
-                        }
-                        if (! templateItem.BaseTemplates.Any(b => b.SyncItem.ID == baseTemplateSyncItem.ID))
-                        {
-                            templateItem.BaseTemplates.Add(new TemplateItem(baseTemplateSyncItem, new List<SyncItem>()));
+                            string baseTemplateFilePath = baseTemplateId.FindFilePath(serializationFolder);
+                            if (string.IsNullOrWhiteSpace(baseTemplateFilePath))
+                            {
+                                continue;
+                            }
+                            FileInfo baseTemplateFile = new FileInfo(baseTemplateFilePath);
+                            if (!baseTemplateFile.Exists)
+                            {
+                                continue;
+                            }
+                            SyncItem baseTemplateSyncItem =
+                                SyncItem.ReadItem(new Tokenizer(baseTemplateFile.OpenText()));
+                            if (baseTemplateSyncItem == null)
+                            {
+                                continue;
+                            }
+                            if (!templateItem.BaseTemplates.Any(b => b.SyncItem.ID == baseTemplateSyncItem.ID))
+                            {
+                                templateItem.BaseTemplates.Add(new TemplateItem(baseTemplateSyncItem,
+                                    new List<SyncItem>()));
+                            }
                         }
                     }
                 }
             }
         }
-
-        protected abstract List<SyncItem> GetAllItems(DirectoryInfo folder, string db, string[] includePaths);
     }
 }

@@ -21,6 +21,7 @@ namespace Sitecore.CodeGenerator
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Rainbow.Model;
 
     public class TemplatesResolver : TemplatesResolverBase
     {
@@ -54,7 +55,7 @@ namespace Sitecore.CodeGenerator
                 }
                 try
                 {
-                    result.Add(SyncItem.ReadItem(new Tokenizer(itemFile.OpenText())));
+                    result.Add(this.GetItem(itemFile, null));
                 }
                 catch (Exception ex)
                 {
@@ -62,6 +63,11 @@ namespace Sitecore.CodeGenerator
                 }
             }
             return result;
+        }
+
+        protected override SyncItem GetItem(FileInfo itemFile, Func<IItemData, bool> mustMatch)
+        {
+            return SyncItem.ReadItem(new Tokenizer(itemFile.OpenText()));
         }
     }
 }

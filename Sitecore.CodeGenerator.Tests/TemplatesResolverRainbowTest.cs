@@ -21,6 +21,8 @@ using Sitecore.CodeGenerator.Domain;
 
 namespace Sitecore.CodeGenerator.Tests
 {
+    using System.IO;
+
     public class TemplatesResolverRainbowTest
     {
         [Test]
@@ -28,30 +30,46 @@ namespace Sitecore.CodeGenerator.Tests
         {
             var resolver = new TemplatesResolverRainbow(
                 @"..\..\..\Sitecore.CodeGenerator.Sample.Glass\Data\Unicorn", new[] { "/sitecore/templates" });
+            AssertTemplates(resolver);
+        }
+
+        [Test]
+        public void ShouldResolveTemplatesFromProject()
+        {
+            DirectoryInfo serializationFolder = new DirectoryInfo(@"..\..\..\Sitecore.CodeGenerator.Scripty.Sample.Glass\Data\Unicorn");
+            serializationFolder.Exists.Should().BeTrue();
+            var files = serializationFolder.GetFiles("*.yml", SearchOption.AllDirectories);
+            files.Length.ShouldBeEquivalentTo(14);
+            var resolver = new TemplatesResolverRainbow(files.Select(f => f.FullName).ToList());
+            AssertTemplates(resolver);
+        }
+        
+        private static void AssertTemplates(TemplatesResolverRainbow resolver)
+        {
             resolver.Templates.Select(t => t.SyncItem.Name).ShouldAllBeEquivalentTo(new[]
-                {
-                    "Animal",
-                    "Dog",
-                    "Food",
-                    "Nameable"
-                });
+            {
+                "Animal",
+                "Dog",
+                "Food",
+                "Nameable"
+            });
 
             TemplateItem dogTemplate = resolver.Templates.FirstOrDefault(t => t.SyncItem.Name == "Dog");
             dogTemplate.Should().NotBeNull();
             dogTemplate.BaseTemplates.Select(b => b.SyncItem.Name).ShouldAllBeEquivalentTo(new[]
-                {
-                    "Animal",
-                    "Nameable"
-                });
+            {
+                "Animal",
+                "Nameable"
+            });
 
             TemplateSection dogSection = dogTemplate.Sections.FirstOrDefault(s => s.SyncItem.Name == "Dog");
             dogSection.Should().NotBeNull();
 
             dogSection.Fields.Select(f => f.SyncItem.Name).ShouldAllBeEquivalentTo(new[]
-                {
-                    "Eats",
-                    "Friends"
-                });
+            {
+                "Eats",
+                "Friends"
+            });
             TemplateField eatsField = dogSection.Fields.FirstOrDefault(f => f.SyncItem.Name == "Eats");
             eatsField.Should().NotBeNull();
             eatsField.FieldTitle.Should().BeEquivalentTo("What food does the dog eat?");
