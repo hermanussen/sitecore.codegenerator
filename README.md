@@ -1,4 +1,4 @@
-#Sitecore.CodeGenerator
+# Sitecore.CodeGenerator
 
 This project allows you to generate interfaces/classes based on your Sitecore template structure. It works with serialized data from Sitecore (incl. TDS/Unicorn) and uses T4 templates for generating the files. The [T4 Toolbox](http://www.olegsych.com/2012/12/t4-toolbox-for-visual-studio-2012/) is used to generate multiple files.
 
